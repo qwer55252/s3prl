@@ -2,12 +2,15 @@ runner:
   total_steps: 200000
   gradient_clipping: 1
   gradient_accumulate_steps: 1
+  # gradient_accumulate_steps: -1
   log_step: 100
   eval_step: 2000
   save_step: 500
   max_keep: 1
+  # eval_dataloaders:
+  #   - dev-clean
   eval_dataloaders:
-    - dev-clean
+    - test-clean
 
 optimizer:
   name: TorchOptim
@@ -44,12 +47,18 @@ downstream_expert:
     test-clean: ['test-clean']
     test-other: ['test-other']
     num_workers: 12
+    # num_workers: 6
     train_batch_size: 32
+    # train_batch_size: 16
     batch_size: 32
+    # batch_size: 16
     eval_batch_size: 1
-    libri_root: '/home/leo/d/datasets/LibriSpeech'
-    bucket_file: './data/librispeech/len_for_bucket'
-    dict_path: "./downstream/asr/char.dict"
+    # libri_root: '/home/leo/d/datasets/LibriSpeech'
+    libri_root: '/home/kobie/workspace/data/LibriSpeech'
+    # bucket_file: './data/librispeech/len_for_bucket'
+    bucket_file: '/home/kobie/workspace/s3prl/s3prl/data/len_for_bucket'
+    # dict_path: "./downstream/asr/char.dict"
+    dict_path: '/home/kobie/workspace/s3prl/s3prl/downstream/asr/char.dict'
 
     zero_infinity: True
 
@@ -64,8 +73,10 @@ downstream_expert:
       criterion: "ctc"
       beam: 5
       beam_threshold: 25
-      kenlm_model: '/home/leo/d/datasets/4-gram.arpa'
-      lexicon: '/home/leo/d/datasets/librispeech_lexicon.lst'
+      # kenlm_model: '/home/leo/d/datasets/4-gram.arpa'
+      kenlm_model: '/home/kobie/workspace/weights/4-gram.arpa'
+      # lexicon: '/home/leo/d/datasets/librispeech_lexicon.lst'
+      lexicon: '/home/kobie/workspace/weights/librispeech_lexicon.lst'
       lm_weight: 2
       word_score: -1
       unk_weight: -math.inf
@@ -86,3 +97,4 @@ downstream_expert:
       proj: [False, False]              # Linear projection + Tanh after each rnn layer
       sample_rate: [1, 1]
       sample_style: 'concat'                  # 'drop'/'concat'
+      # sample_style: 'drop'                  # 'drop'/'concat'
